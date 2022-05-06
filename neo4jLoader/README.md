@@ -24,7 +24,7 @@
   + Hindex （#hi）
   + Pindex （#pi）
   + UPindex （#upi）
-  + interests （#i）研究兴趣领域（冗余）
+  + interests （#t）研究兴趣领域（冗余）
 
 + 隶属单位
 
