@@ -28,11 +28,13 @@ def read_paper():
         elif line2 == "#t":
             paper_node["year"] = line_end
             # 年标签
-            paper_node.add_label(line_end)
+            if line_end != "" and line_end != "-":
+                paper_node.add_label(line_end)
         elif line2 == "#c":
             paper_node["venue"] = line_end
             # 会议标签
-            paper_node.add_label(line_end)
+            if line_end != "" and line_end != "-":
+                paper_node.add_label(line_end)
         elif line2 == "#%":
             # 特殊处理
             if paper_node["ref"] is not None:
