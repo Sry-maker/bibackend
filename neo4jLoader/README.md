@@ -26,29 +26,35 @@
   + UPindex （#upi）
   + interests （#t）研究兴趣领域（冗余）
 
-+ 隶属单位
++ AFFILIATION (隶属单位)
 
-  例：
+  + name
 
-  Polish Academy of Sciences, Warsaw, Poland
+    例：
 
-  School of Computing Sciences, University of East Anglia, Norwich, UK
+    Polish Academy of Sciences, Warsaw, Poland
 
-+ 领域标签**（需要设置大小写不敏感）**
+    School of Computing Sciences, University of East Anglia, Norwich, UK
 
-  例：
++ INTEREST 领域 
 
-  Information Security
+  + name **（需要设置大小写不敏感）**
 
-  control group
+    例：
 
-+ 期刊/会议标签
+    Information Security
 
-  例：
+    control group
 
-  ACM Transactions on Graphics (TOG)
++ VENUE 期刊/会议
 
-  Physical structures and application on Database design techniques II
+  + name
+
+    例：
+
+    ACM Transactions on Graphics (TOG)
+
+    Physical structures and application on Database design techniques II
 
 + 年标签	
 
