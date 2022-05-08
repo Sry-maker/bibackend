@@ -4,7 +4,7 @@
 
 #### 标签类型
 
-+ PAPER
++ PAPER 2092356
   + 属性列表
   + index (#index)
   + title (#*)
@@ -15,7 +15,7 @@
   + ref 引用 （#%）（冗余）
   + abstract 摘要（#!）
 
-+ AUTHOR
++ AUTHOR 1712440
   + index (#index)
   + name (#n)
   + affiliations (#a) 作者的隶属单位，可以多个（冗余）
@@ -26,7 +26,7 @@
   + UPindex （#upi）
   + interests （#t）研究兴趣领域（冗余）
 
-+ AFFILIATION (隶属单位)
++ AFFILIATION (隶属单位) 624734
 
   + name
 
@@ -36,7 +36,7 @@
 
     School of Computing Sciences, University of East Anglia, Norwich, UK
 
-+ INTEREST 领域 
++ INTEREST 领域 4359779
 
   + name **（需要设置大小写不敏感）**
 
@@ -46,7 +46,7 @@
 
     control group
 
-+ VENUE 期刊/会议
++ VENUE 期刊/会议 264024
 
   + name
 
