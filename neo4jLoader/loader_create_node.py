@@ -161,10 +161,21 @@ if __name__ == '__main__':
         print("constraint3 已存在")
 
     #  节点创建
-    read_paper()
-    read_author()
+    ## read_paper()
+    ## read_author()
 
-    # 创建关系
+    # 将节点的数值属性修改正确
+
+    # 创建索引
+    index1 = "CREATE INDEX ON :AUTHOR (index)"
+    graph.run(index1)
+    index2 = "CREATE INDEX ON :PAPER (index)"
+    graph.run(index2)
+    # 有unique的属性不需要创建索引，已经存在默认的索引
+
+
+
+
 
     # WRITE = Relationship.type("WRITE")
     # nodes = NodeMatcher(graph)
