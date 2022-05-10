@@ -92,7 +92,7 @@ def read_author():
         elif line[:4] == "#upi":
             author_node["UPindex"] = line[5:-1]
         elif line2 == "#t":
-            author_node["interests"] = line_end3
+            author_node["interests"] = line_end2
             # 创建作者的兴趣领域
             for label in line_end3.split(";"):
                 if label != "" and label != "-":
@@ -171,6 +171,8 @@ if __name__ == '__main__':
     graph.run(index1)
     index2 = "CREATE INDEX ON :PAPER (index)"
     graph.run(index2)
+    index3 = "CREATE INDEX ON :AUTHOR (name)"
+    graph.run(index3)
     # 有unique的属性不需要创建索引，已经存在默认的索引
 
 
