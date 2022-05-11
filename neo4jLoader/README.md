@@ -60,10 +60,13 @@
 
 #### 关系类型
 
-+ AUTHOR - WRITE ->  PAPER
-+ AUTHOR - CO_AUTHOR -> AUTHOR
++ AUTHOR - co_author -> AUTHOR **(4,258,946)**
   + count 合作次数
-+ AUTHOR - BELONG_TO -> 隶属单位
-+ AUTHOR - INTERESTS -> 领域标签
-+ PAPER - REFERENCE -> PAPER
-+ 期刊/会议标签 - PUBLISH -> PAPER
++ AUTHOR - write ->  PAPER
++ PAPER - refer -> PAPER
++ 期刊/会议标签 - publish -> PAPER
+
+
+
++ AUTHOR - belong_to -> 隶属单位
++ AUTHOR - has_interest -> 领域标签
