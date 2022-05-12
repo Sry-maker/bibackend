@@ -2,7 +2,7 @@
 
 ### 数据库schema
 
-#### 标签类型
+#### 标签类型 30h
 
 + PAPER 2092356
   + 属性列表
@@ -60,11 +60,11 @@
 
 #### 关系类型
 
-+ AUTHOR - co_author -> AUTHOR **(4,258,946)**
++ AUTHOR - co_author -> AUTHOR **(4,258,946)** 9h
   + count 合作次数
-+ AUTHOR - write ->  PAPER
-+ PAPER - refer -> PAPER
-+ 期刊/会议标签 - publish -> PAPER
++ AUTHOR - write ->  PAPER (4456056）10h
++ PAPER - refer -> PAPER  (8024869) 13h
++ 期刊/会议标签 - publish -> PAPER (2092218) 4h
 
 
 
