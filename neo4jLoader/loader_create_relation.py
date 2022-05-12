@@ -1,7 +1,7 @@
 import logging
 import os
 
-from py2neo import Graph, Relationship, NodeMatcher
+from py2neo import Graph, Relationship, NodeMatcher, Node, errors
 
 # 使用环境变量，防止密码泄露
 graph = Graph(address=os.getenv("DATABASE_IP"),
@@ -103,7 +103,6 @@ def create_publish_relation():
         if line6 == "#index":
             cur_paper_node = nodes.match("PAPER", index=line[7:-1]).first()
         elif line2 == "#c":
-            print(line_end)
             try:
                 venue_node = nodes.match("VENUE", name=line_end).first()
                 r = Relationship(venue_node, "publish", cur_paper_node)
@@ -151,9 +150,17 @@ def create_has_interest_relation():
                 line = file.readline()
                 continue
             for interest in cur_author_node["interests"].split(";"):
-                print(interest)
                 try:
                     interest_node = nodes.match("INTEREST", name=interest).first()
+                    # 仍然有节点没有储存上，原因复杂
+                    if interest_node is None and interest != "" and interest != "-":
+                        print("create interest: ", interest)
+                        interest_node = Node("INTEREST")
+                        interest_node["name"] = interest
+                        try:
+                            graph.create(interest_node)
+                        except errors.ClientError:
+                            logger.exception()
                     r = Relationship(cur_author_node, "has_interest", interest_node)
                     graph.create(r)
                 except Exception:
@@ -173,16 +180,20 @@ if __name__ == '__main__':
 
     print("start")
     # 建立co_author关系
-    # create_coauthor_relation()
+    # create_coauthor_relation() √
     print("create_coauthor_relation()")
 
     # 建立write关系
-    create_write_relation()
+    # create_write_relation()  √
     print("create_write_relation()")
 
     # 建立refer关系
-    # create_refer_relation()
+    # create_refer_relation() √
     print("create_refer_relation()")
+
+    # 建立publish关系
+    # create_publish_relation() √
+    print("create_publish_relation()")
 
     # 建立belong_to关系
     # create_belong_to_relation()
@@ -191,8 +202,3 @@ if __name__ == '__main__':
     # 建立has_interest关系
     # create_has_interest_relation()
     print("create_has_interest_relation()")
-
-    # 建立publish关系
-    # create_publish_relation()
-    # create_publish_relation()
-    print("create_publish_relation()")
