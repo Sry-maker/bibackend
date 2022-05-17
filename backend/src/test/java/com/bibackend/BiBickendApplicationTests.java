@@ -66,6 +66,7 @@ public class BiBickendApplicationTests {
 //        long count4 = venueRepository.count();
 //        System.out.println(count4);
 
+
         long count5 = has_interestRepository.count();
         System.out.println(count5);
 
