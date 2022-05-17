@@ -3,9 +3,7 @@ package com.bibackend.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.neo4j.ogm.annotation.GeneratedValue;
-import org.neo4j.ogm.annotation.Id;
-import org.neo4j.ogm.annotation.RelationshipEntity;
+import org.neo4j.ogm.annotation.*;
 
 import java.io.Serializable;
 
@@ -16,6 +14,12 @@ public class WRITE implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
+
+    @StartNode
+    private AUTHOR author;
+
+    @EndNode
+    private PAPER paper;
 
 
 }
