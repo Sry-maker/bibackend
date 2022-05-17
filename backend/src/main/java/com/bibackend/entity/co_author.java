@@ -1,22 +1,23 @@
 package com.bibackend.entity;
 
-import lombok.Builder;
 import lombok.Data;
-import org.neo4j.ogm.annotation.NodeEntity;
+import lombok.NoArgsConstructor;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.RelationshipEntity;
 
 import java.io.Serializable;
 
 @Data
-@Builder
-@NodeEntity(label = "VENUE")
-public class VENUE implements Serializable{
+@NoArgsConstructor
+@RelationshipEntity(type = "WRITE")
+public class CO_AUTHOR implements Serializable{
+
     @Id
     @GeneratedValue
     private Long id;
 
     @Property
-    private String name;
+    private Integer count;
 }
