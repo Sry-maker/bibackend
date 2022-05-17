@@ -2,10 +2,8 @@ package com.bibackend.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.neo4j.ogm.annotation.GeneratedValue;
-import org.neo4j.ogm.annotation.Id;
-import org.neo4j.ogm.annotation.Property;
-import org.neo4j.ogm.annotation.RelationshipEntity;
+import org.neo4j.ogm.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
@@ -20,4 +18,10 @@ public class CO_AUTHOR implements Serializable{
 
     @Property
     private Integer count;
+
+    @StartNode
+    private AUTHOR startAuthor;
+
+    @EndNode
+    private AUTHOR endAuthor;
 }
