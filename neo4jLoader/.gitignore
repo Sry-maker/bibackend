@@ -1,2 +1,6 @@
 /data
 /.idea
+
+###### customed ignore file #####
+/test.py
+/fix_data.py
