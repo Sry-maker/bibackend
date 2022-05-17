@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class AUTHOR implements Serializable{
     @Id
     @GeneratedValue
-    private String id;
+    private Long id;
 
     @Property
     private String Hindex;

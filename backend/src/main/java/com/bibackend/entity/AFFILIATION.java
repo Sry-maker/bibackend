@@ -18,7 +18,7 @@ public class AFFILIATION implements Serializable {
 
     @Id
     @GeneratedValue
-    private String id;
+    private Long id;
 
     @Property
     private String name;
