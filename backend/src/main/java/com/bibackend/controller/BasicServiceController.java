@@ -113,13 +113,13 @@ public class BasicServiceController {
 //        System.out.println(allhas_interestnode);
 //        System.out.println("coauthornode");
         List<Map<String, Object>> allcoauthornode = authorRepository.findAllcoauthornode(index);
-        List<Map<String, Object>> alldcoauthornode = authorRepository.findAlldcoauthornode(index);
+//        List<Map<String, Object>> alldcoauthornode = authorRepository.findAlldcoauthornode(index);
 //        System.out.println(allcoauthornode);
         Map<String,List> result=new HashMap<>();
         result.put("write", allwritenode);
         result.put("has_interestnode", allhas_interestnode);
         result.put("coauthornode", allcoauthornode);//两个的区别是方向
-        result.put("dcoauthornode",alldcoauthornode);
+//        result.put("dcoauthornode",alldcoauthornode);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -129,10 +129,10 @@ public class BasicServiceController {
     public ResponseEntity<Object> getallpaper(@Param("index") String index) {
 //        System.out.println("write");
         List<Map<String, Object>> allreferednode = paperRepository.findAllreferednode(index);
-        List<Map<String, Object>> allrefernode = paperRepository.findAllrefernode(index);
+//        List<Map<String, Object>> allrefernode = paperRepository.findAllrefernode(index);
         Map<String,List> result=new HashMap<>();
         result.put("referednode", allreferednode);
-        result.put("refernode", allrefernode);
+//        result.put("refernode", allrefernode);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -156,7 +156,7 @@ public class BasicServiceController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @Operation(summary = "查询paper与paper之间的5跳之内（包括一跳）关系")
+    @Operation(summary = "查询paper与paper之间的5跳之内（包括1跳）关系")
     @GetMapping("paandpa")
     public ResponseEntity<Object> getallpaandpa(@Param("index1") String index1,@Param("index2") String index2) {
         List<Map<String, Object>> allonereferednode = paperRepository.findAllonereferednode(index1, index2);
