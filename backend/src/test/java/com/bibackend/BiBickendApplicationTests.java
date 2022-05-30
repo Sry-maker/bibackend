@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @SpringBootTest
@@ -65,14 +66,21 @@ public class BiBickendApplicationTests {
 //
 //        long count4 = venueRepository.count();
 //        System.out.println(count4);
+//
+//        System.out.println("write");
+//        List<Map<String, Object>> allwritenode = authorRepository.findAllwritenode("20");
+//        System.out.println(allwritenode);
+//        System.out.println("has_interestnode");
+//        List<Map<String, Object>> allhas_interestnode = authorRepository.findAllhas_interestnode("20");
+//        System.out.println(allhas_interestnode);
+//        List<Map<String, Object>> allcoauthornode = authorRepository.findAllcoauthornode("20");
+//        System.out.println(allcoauthornode);
 
+        List<Map<String, Object>> allreferednode = paperRepository.findAllreferednode("512");
+        System.out.println(allreferednode);
 
-        long count5 = has_interestRepository.count();
-        System.out.println(count5);
-
-
-
-
+        List<Map<String, Object>> allrefernode = paperRepository.findAllrefernode("512");
+        System.out.println(allrefernode);
 
     }
 
