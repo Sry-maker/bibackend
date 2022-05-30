@@ -76,11 +76,13 @@ public class BiBickendApplicationTests {
 //        List<Map<String, Object>> allcoauthornode = authorRepository.findAllcoauthornode("20");
 //        System.out.println(allcoauthornode);
 
-        List<Map<String, Object>> allreferednode = paperRepository.findAllreferednode("512");
-        System.out.println(allreferednode);
-
-        List<Map<String, Object>> allrefernode = paperRepository.findAllrefernode("512");
-        System.out.println(allrefernode);
+//        List<Map<String, Object>> allreferednode = paperRepository.findAllreferednode("512");
+//        System.out.println(allreferednode);
+//
+//        List<Map<String, Object>> allrefernode = paperRepository.findAllrefernode("512");
+//        System.out.println(allrefernode);
+//        List<Map<String, Object>> maps = authorRepository.findallRelation("624678", "624878");
+//        System.out.println(maps);
 
     }
 
