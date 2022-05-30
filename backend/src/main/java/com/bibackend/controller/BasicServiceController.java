@@ -113,11 +113,13 @@ public class BasicServiceController {
 //        System.out.println(allhas_interestnode);
 //        System.out.println("coauthornode");
         List<Map<String, Object>> allcoauthornode = authorRepository.findAllcoauthornode(index);
+        List<Map<String, Object>> alldcoauthornode = authorRepository.findAlldcoauthornode(index);
 //        System.out.println(allcoauthornode);
         Map<String,List> result=new HashMap<>();
         result.put("write", allwritenode);
         result.put("has_interestnode", allhas_interestnode);
-        result.put("coauthornode", allcoauthornode);
+        result.put("coauthornode", allcoauthornode);//两个的区别是方向
+        result.put("dcoauthornode",alldcoauthornode);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -135,36 +137,52 @@ public class BasicServiceController {
     }
 
 
-    @Operation(summary = "查询作者与作者之间的两跳关系")
+    @Operation(summary = "查询作者与作者之间的5跳及以内（包括1跳）关系")
     @GetMapping("auandau")
     public ResponseEntity<Object> getallauandau(@Param("index1") String index1,@Param("index2") String index2) {
 //        System.out.println("has_interest");
 //        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation("1243827", "1340571");
-        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation(index1, index2);
+//        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation(index1, index2);
+//        List<Map<String, Object>> allonecoauthornode = authorRepository.findAllonecoauthornode(index1, index2);
 
-        return new ResponseEntity<>(interestRelation, HttpStatus.OK);
+
+
+        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation("1243827", "1340571");
+        List<Map<String, Object>> allonecoauthornode = authorRepository.findAllonecoauthornode("1243827", "1340571");
+
+        Map<String,List> result=new HashMap<>();
+        result.put("interestRelation", interestRelation);
+        result.put("onecoauthornode", allonecoauthornode);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @Operation(summary = "查询paper与paper之间的两跳关系")
+    @Operation(summary = "查询paper与paper之间的5跳之内（包括一跳）关系")
     @GetMapping("paandpa")
     public ResponseEntity<Object> getallpaandpa(@Param("index1") String index1,@Param("index2") String index2) {
-
+        List<Map<String, Object>> allonereferednode = paperRepository.findAllonereferednode(index1, index2);
         List<Map<String, Object>> authorRelation = authorRepository.findauthorRelation(index1, index2);
-
+        List<Map<String, Object>> allthreereferednode = paperRepository.findAllthreereferednode(index1, index2);
+        List<Map<String, Object>> authorinterestRelation = interestRepository.findauthorinterestRelation(index1, index2);
+//        authorRepository.findallRelation("624678", "624878");
 //        List<Map<String, Object>> authorRelation = authorRepository.findauthorRelation("624678", "624878");
+        Map<String,List> result=new HashMap<>();
 
-        return new ResponseEntity<>(authorRelation, HttpStatus.OK);
+        result.put("onepaandpa", allonereferednode);
+        result.put("twopaandpa", authorRelation);
+        result.put("threepaandpa", allthreereferednode);
+        result.put("fourpaandpa", authorinterestRelation);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @Operation(summary = "查询paper与paper之间的四跳关系")
-    @GetMapping("paandpafour")
-    public ResponseEntity<Object> getallpaandpafour(@Param("index1") String index1,@Param("index2") String index2) {
-
-        List<Map<String, Object>> authorRelation = interestRepository.findauthorinterestRelation(index1, index2);
-
-//        List<Map<String, Object>> authorRelation = interestRepository.findauthorinterestRelation("1095401", "1242327");
-
-        return new ResponseEntity<>(authorRelation, HttpStatus.OK);
-    }
+//    @Operation(summary = "查询paper与paper之间的四跳关系")
+//    @GetMapping("paandpafour")
+//    public ResponseEntity<Object> getallpaandpafour(@Param("index1") String index1,@Param("index2") String index2) {
+//
+//        List<Map<String, Object>> authorRelation = interestRepository.findauthorinterestRelation(index1, index2);
+//
+////        List<Map<String, Object>> authorRelation = interestRepository.findauthorinterestRelation("1095401", "1242327");
+//
+//        return new ResponseEntity<>(authorRelation, HttpStatus.OK);
+//    }
 
 
 }
