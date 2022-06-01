@@ -83,6 +83,11 @@ public class BiBickendApplicationTests {
 //        System.out.println(allrefernode);
 //        List<Map<String, Object>> maps = authorRepository.findallRelation("624678", "624878");
 //        System.out.println(maps);
+//        List<Map<String, Object>> findtestnode = paperRepository.findtestnode("624678", "624878");
+//        System.out.println(findtestnode.toString());
+
+        List<Map<String, Object>> allttestnode = paperRepository.findpandpnode("516", "515");
+        System.out.println(allttestnode.toString());
 
     }
 
