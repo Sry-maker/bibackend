@@ -20,4 +20,7 @@ public interface INTERESTRepository extends Neo4jRepository<INTEREST,Long> {
     @Query("MATCH (paper1:PAPER)-[:write]-(author1:AUTHOR)-[:has_interest]-(interest:INTEREST)-[:has_interest]-(author2:AUTHOR)-[:write]-(paper2:PAPER) WHERE paper1.index=$index1 AND paper2.index=$index2 RETURN 'paper1-write-author1-has_interest-INTEREST-has_interest-author2-write-paper2',paper1.title,paper2.title,author1.name,author2.name,interest.name limit 25")
     List<Map<String,Object>> findauthorinterestRelation(@Param("index1") String index1,@Param("index2") String index2);
 
+
+    //
+
 }

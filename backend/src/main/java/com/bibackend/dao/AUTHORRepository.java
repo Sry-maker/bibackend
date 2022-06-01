@@ -21,30 +21,41 @@ public interface AUTHORRepository extends Neo4jRepository<AUTHOR,Long> {
 
 
     //   查询作者其关联的所有关系和关联实体（write）
-    @Query("match (author:AUTHOR)-[:write]->(paper:PAPER) where author.index=$index return 'write',author.name,paper.title")
+    @Query("match (author:AUTHOR)-[:write]->(paper:PAPER) where author.index=$index return author.name,paper.title")
     List<Map<String,Object>> findAllwritenode(@Param("index") String index);
 
     //   查询作者其关联的所有关系和关联实体（has_interest）
-    @Query("match (author:AUTHOR)-[:has_interest]->(interest:INTEREST) where author.index=$index return 'has_interest',author.name,interest.name")
+    @Query("match (author:AUTHOR)-[:has_interest]->(interest:INTEREST) where author.index=$index return author.name,interest.name")
     List<Map<String,Object>> findAllhas_interestnode(@Param("index") String index);
 
     //   查询作者其关联的所有关系和关联实体（coauthor）
-    @Query("match (author:AUTHOR)-[:WRITE]-(coauthor:AUTHOR) where author.index=$index return 'WRITE',author.name,coauthor.name")
+    @Query("match (author:AUTHOR)-[:WRITE]-(coauthor:AUTHOR) where author.index=$index return author.name,coauthor.name")
     List<Map<String,Object>> findAllcoauthornode(@Param("index") String index);
 //    //   查询作者其关联的所有关系和关联实体（coauthor）注意方向
 //    @Query("match (author:AUTHOR)-[:WRITE]->(coauthor:AUTHOR) where author.index=$index return author.name,coauthor.name")
 //    List<Map<String,Object>> findAlldcoauthornode(@Param("index") String index);
 
-
-
-    //   查询有共同作者的paper
-    @Query("MATCH (paper1:PAPER)-[:write]-(author:AUTHOR)-[:write]-(paper2:PAPER) WHERE paper1.index=$index1 AND paper2.index=$index2 RETURN 'paper1-write-author-write-paper2',paper1.title,paper2.title,author.name limit 25")
-    List<Map<String,Object>> findauthorRelation(@Param("index1") String index1,@Param("index2") String index2);
-    //   查询作者1（coauthor）
-    @Query("match (author:AUTHOR)-[:WRITE]-(coauthor:AUTHOR) where author.index=$index1 and coauthor.index=$index2 return 'author-WRITE-coauthor',author.name,coauthor.name")
-    List<Map<String,Object>> findAllonecoauthornode(@Param("index1") String index1,@Param("index2") String index2);
+    //   查询作者其关联的所有关系和关联实体（belong_to）
+    @Query("match (author:AUTHOR)-[:belong_to]-(affiliation:AFFILIATION) where author.index=$index return author.name,affiliation.name")
+    List<Map<String,Object>> findAllbelongtonode(@Param("index") String index);
 
 
 
+
+
+//    //   查询有共同作者的paper
+//    @Query("MATCH (paper1:PAPER)-[:write]-(author:AUTHOR)-[:write]-(paper2:PAPER) WHERE paper1.index=$index1 AND paper2.index=$index2 RETURN 'paper1-write-author-write-paper2',paper1.title,paper2.title,author.name limit 25")
+//    List<Map<String,Object>> findauthorRelation(@Param("index1") String index1,@Param("index2") String index2);
+//    //   查询作者1（coauthor）
+//    @Query("match (author:AUTHOR)-[:WRITE]-(coauthor:AUTHOR) where author.index=$index1 and coauthor.index=$index2 return 'author-WRITE-coauthor',author.name,coauthor.name")
+//    List<Map<String,Object>> findAllonecoauthornode(@Param("index1") String index1,@Param("index2") String index2);
+
+
+    @Query("MATCH p=(author1:AUTHOR)-[*..3]-(author2:AUTHOR) WHERE author1.index=$index1 AND author2.index=$index2 RETURN p")
+    List<Map<String,Object>> findAllaandanode(@Param("index1") String index1,@Param("index2") String index2);
+
+
+    @Query("MATCH p=(author:AUTHOR)-[*..3]-(paper:PAPER) WHERE author.index=$index1 AND paper.index=$index2 RETURN p")
+    List<Map<String,Object>> findAllaandpnode(@Param("index1") String index1,@Param("index2") String index2);
 
 }

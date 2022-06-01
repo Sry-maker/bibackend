@@ -105,21 +105,36 @@ public class BasicServiceController {
     @Operation(summary = "查询作者其所关联的所有关系和关联实体")
     @GetMapping("allauthor")
     public ResponseEntity<Object> getallauthor(@Param("index") String index) {
-//        System.out.println("write");
+
         List<Map<String, Object>> allwritenode = authorRepository.findAllwritenode(index);
-//        System.out.println(allwritenode);
-//        System.out.println("has_interestnode");
+        for(int i =0;i<allwritenode.size();i++){
+            Map<String, Object> temp=allwritenode.get(i);
+            temp.put("relation","author-write-paper");
+        }
         List<Map<String, Object>> allhas_interestnode = authorRepository.findAllhas_interestnode(index);
-//        System.out.println(allhas_interestnode);
-//        System.out.println("coauthornode");
+        for(int i =0;i<allhas_interestnode.size();i++){
+            Map<String, Object> temp=allhas_interestnode.get(i);
+            temp.put("relation","author-has_interestnode-interest");
+        }
         List<Map<String, Object>> allcoauthornode = authorRepository.findAllcoauthornode(index);
-//        List<Map<String, Object>> alldcoauthornode = authorRepository.findAlldcoauthornode(index);
-//        System.out.println(allcoauthornode);
+        for(int i =0;i<allcoauthornode.size();i++){
+            Map<String, Object> temp=allcoauthornode.get(i);
+            temp.put("relation","author-WRITE-interest");
+        }
+
+        List<Map<String, Object>> allbelongtonode = authorRepository.findAllbelongtonode(index);
+        for(int i =0;i<allbelongtonode.size();i++){
+            Map<String, Object> temp=allbelongtonode.get(i);
+            temp.put("relation","author-belong_to-interest");
+        }
+
+
         Map<String,List> result=new HashMap<>();
+        result.put("belong_to", allbelongtonode);
         result.put("write", allwritenode);
         result.put("has_interestnode", allhas_interestnode);
-        result.put("coauthornode", allcoauthornode);//两个的区别是方向
-//        result.put("dcoauthornode",alldcoauthornode);
+        result.put("coauthornode", allcoauthornode);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -127,12 +142,28 @@ public class BasicServiceController {
     @Operation(summary = "查询paper其所关联的所有关系和关联实体")
     @GetMapping("allpaper")
     public ResponseEntity<Object> getallpaper(@Param("index") String index) {
-//        System.out.println("write");
+
         List<Map<String, Object>> allreferednode = paperRepository.findAllreferednode(index);
-//        List<Map<String, Object>> allrefernode = paperRepository.findAllrefernode(index);
+        for(int i =0;i<allreferednode.size();i++){
+            Map<String, Object> temp=allreferednode.get(i);
+            temp.put("relation","paper-refer-paper");
+        }
+        List<Map<String, Object>> allpublishnode = paperRepository.findAllpublishnode(index);
+        for(int i =0;i<allpublishnode.size();i++){
+            Map<String, Object> temp=allpublishnode.get(i);
+            temp.put("relation","venue-publish-paper");
+        }
+        List<Map<String, Object>> allwritenode = paperRepository.findAllwritenode(index);
+        for(int i =0;i<allwritenode.size();i++){
+            Map<String, Object> temp=allwritenode.get(i);
+            temp.put("relation","author-write-paper");
+        }
+
+
         Map<String,List> result=new HashMap<>();
-        result.put("referednode", allreferednode);
-//        result.put("refernode", allrefernode);
+        result.put("refernode", allreferednode);
+        result.put("publishnode", allpublishnode);
+        result.put("writenode", allwritenode);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -147,42 +178,48 @@ public class BasicServiceController {
 
 
 
-        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation("1243827", "1340571");
-        List<Map<String, Object>> allonecoauthornode = authorRepository.findAllonecoauthornode("1243827", "1340571");
+//        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation("1243827", "1340571");
+//        List<Map<String, Object>> allonecoauthornode = authorRepository.findAllonecoauthornode("1243827", "1340571");
+//
+//        Map<String,List> result=new HashMap<>();
+//        result.put("interestRelation", interestRelation);
+//        result.put("onecoauthornode", allonecoauthornode);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+//        authorRepository.findAllaandanode(index1,index2);
+        List<Map<String, Object>> allaandanode = authorRepository.findAllaandanode(index1, index2);
+        return new ResponseEntity<>(allaandanode, HttpStatus.OK);
 
-        Map<String,List> result=new HashMap<>();
-        result.put("interestRelation", interestRelation);
-        result.put("onecoauthornode", allonecoauthornode);
-        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Operation(summary = "查询paper与paper之间的5跳之内（包括1跳）关系")
     @GetMapping("paandpa")
     public ResponseEntity<Object> getallpaandpa(@Param("index1") String index1,@Param("index2") String index2) {
-        List<Map<String, Object>> allonereferednode = paperRepository.findAllonereferednode(index1, index2);
-        List<Map<String, Object>> authorRelation = authorRepository.findauthorRelation(index1, index2);
-        List<Map<String, Object>> allthreereferednode = paperRepository.findAllthreereferednode(index1, index2);
-        List<Map<String, Object>> authorinterestRelation = interestRepository.findauthorinterestRelation(index1, index2);
-//        authorRepository.findallRelation("624678", "624878");
-//        List<Map<String, Object>> authorRelation = authorRepository.findauthorRelation("624678", "624878");
-        Map<String,List> result=new HashMap<>();
-
-        result.put("onepaandpa", allonereferednode);
-        result.put("twopaandpa", authorRelation);
-        result.put("threepaandpa", allthreereferednode);
-        result.put("fourpaandpa", authorinterestRelation);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-//    @Operation(summary = "查询paper与paper之间的四跳关系")
-//    @GetMapping("paandpafour")
-//    public ResponseEntity<Object> getallpaandpafour(@Param("index1") String index1,@Param("index2") String index2) {
+//        List<Map<String, Object>> allonereferednode = paperRepository.findAllonereferednode(index1, index2);
+//        List<Map<String, Object>> authorRelation = authorRepository.findauthorRelation(index1, index2);
+//        List<Map<String, Object>> allthreereferednode = paperRepository.findAllthreereferednode(index1, index2);
+//        List<Map<String, Object>> authorinterestRelation = interestRepository.findauthorinterestRelation(index1, index2);
+////        authorRepository.findallRelation("624678", "624878");
+////        List<Map<String, Object>> authorRelation = authorRepository.findauthorRelation("624678", "624878");
+//        Map<String,List> result=new HashMap<>();
 //
+//        result.put("onepaandpa", allonereferednode);
+//        result.put("twopaandpa", authorRelation);
+//        result.put("threepaandpa", allthreereferednode);
+//        result.put("fourpaandpa", authorinterestRelation);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+        List<Map<String, Object>> findpandpnode = paperRepository.findpandpnode(index1, index2);
+        return new ResponseEntity<>(findpandpnode, HttpStatus.OK);
+    }
+    @Operation(summary = "查询paper与paper之间的四跳关系")
+    @GetMapping("paandau")
+    public ResponseEntity<Object> getallpaandpafour(@Param("index1") String index1,@Param("index2") String index2) {
+
 //        List<Map<String, Object>> authorRelation = interestRepository.findauthorinterestRelation(index1, index2);
 //
 ////        List<Map<String, Object>> authorRelation = interestRepository.findauthorinterestRelation("1095401", "1242327");
-//
-//        return new ResponseEntity<>(authorRelation, HttpStatus.OK);
-//    }
+
+        return new ResponseEntity<>(authorRepository.findAllaandpnode(index1,index2), HttpStatus.OK);
+    }
 
 
 }
