@@ -4,6 +4,9 @@ import com.bibackend.dao.*;
 import com.bibackend.entity.AUTHOR;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import org.neo4j.driver.internal.InternalNode;
+import org.neo4j.driver.internal.InternalPath;
+import org.neo4j.driver.internal.InternalRelationship;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/basicService")
@@ -171,54 +177,334 @@ public class BasicServiceController {
     @Operation(summary = "查询作者与作者之间的5跳及以内（包括1跳）关系")
     @GetMapping("auandau")
     public ResponseEntity<Object> getallauandau(@Param("index1") String index1,@Param("index2") String index2) {
-//        System.out.println("has_interest");
-//        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation("1243827", "1340571");
-//        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation(index1, index2);
-//        List<Map<String, Object>> allonecoauthornode = authorRepository.findAllonecoauthornode(index1, index2);
+        List<Map<String, String>> data = new ArrayList<>();
+        List<Map<String,String>>  links=new ArrayList<>();
+        List<Map<String, Object>> allttestnode = authorRepository.findAllaandanode(index1,index2);
+        for (Map<String, Object> temp:allttestnode){
+            InternalPath.SelfContainedSegment[] ps=(InternalPath.SelfContainedSegment[]) temp.get("p");
+            for (InternalPath.SelfContainedSegment p : ps) {
+                InternalNode st= (InternalNode) p.start();
+                Map<String, Object> sttest= st.asMap();
+                Map<String, String> stret = new HashMap<>();
+                for (Map.Entry<String, Object> entry : sttest.entrySet()) {
+                    stret.put(entry.getKey(), (String) entry.getValue());
+                }
+                List<String> labels = (List<String>) st.labels();
+                String q=labels.get(0);
+                if(labels.get(0).equals("PAPER")){
+                    stret.put("category","0");
+                }
+                else if(labels.get(0).equals("AUTHOR")){
+                    stret.put("category","1");
+                }
+                else if(labels.get(0).equals("INTEREST")){
+                    stret.put("category","2");
+                }
+                else if(labels.get(0).equals("AFFILIATION")){
+                    stret.put("category","3");
+                }
+                else if(labels.get(0).equals("VENUE")){
+                    stret.put("category","4");
+                }
+                boolean isEmpty=stret.containsKey("name");
+                if(isEmpty==true){
+                    String truename=stret.get("name");
+                    stret.put("truename",truename);
+                }
+                long tempid = st.id();
+                String id = String.valueOf(tempid);
+                stret.put("name",id);
+                boolean stexist=false;
+                for (Map<String,String> newMap : data){
+                    if(newMap.get("name").equals(stret.get("name"))){
+                        stexist=true;
+                    }
+                }
+                if(stexist==false){
+                    data.add(stret);
+                }
 
 
+                InternalNode end= (InternalNode) p.end();
+                Map<String, Object> endtest= end.asMap();
+                Map<String, String> endret = new HashMap<>();
+                for (Map.Entry<String, Object> entry : endtest.entrySet()) {
+                    endret.put(entry.getKey(), (String) entry.getValue());
+                }
+                List<String> endlabels = (List<String>) end.labels();
+                String endq=endlabels.get(0);
+                if(endlabels.get(0).equals("PAPER")){
+                    endret.put("category","0");
+                }
+                else if(endlabels.get(0).equals("AUTHOR")){
+                    endret.put("category","1");
+                }
+                else if(endlabels.get(0).equals("INTEREST")){
+                    endret.put("category","2");
+                }
+                else if(endlabels.get(0).equals("AFFILIATION")){
+                    endret.put("category","3");
+                }
+                else if(endlabels.get(0).equals("VENUE")){
+                    endret.put("category","4");
+                }
+                boolean endisEmpty=endret.containsKey("name");
+                if(endisEmpty==true){
+                    String endtruename=endret.get("name");
+                    endret.put("truename",endtruename);
+                }
+                long endtempid = end.id();
+                String endid = String.valueOf(endtempid);
+                endret.put("name",endid);
+                boolean endexist=false;
+                for (Map<String,String> newMap : data){
+                    if(newMap.get("name").equals(endret.get("name"))){
+                        endexist=true;
+                    }
+                }
+                if(endexist==false){
+                    data.add(endret);
+                }
 
-//        List<Map<String, Object>> interestRelation = interestRepository.findInterestRelation("1243827", "1340571");
-//        List<Map<String, Object>> allonecoauthornode = authorRepository.findAllonecoauthornode("1243827", "1340571");
-//
-//        Map<String,List> result=new HashMap<>();
-//        result.put("interestRelation", interestRelation);
-//        result.put("onecoauthornode", allonecoauthornode);
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-//        authorRepository.findAllaandanode(index1,index2);
-        List<Map<String, Object>> allaandanode = authorRepository.findAllaandanode(index1, index2);
-        return new ResponseEntity<>(allaandanode, HttpStatus.OK);
+
+                InternalRelationship relationship= (InternalRelationship) p.relationship();
+                Map<String, String> link = new HashMap<>();
+                long startNodeId=relationship.startNodeId();
+                long endNodeId = relationship.endNodeId();
+                String type = relationship.type();
+                link.put("source",String.valueOf(startNodeId));
+                link.put("target",String.valueOf(endNodeId));
+                link.put("type",type);
+                links.add(link);
+
+            }
+        }
+        Map<String, Object> result= new HashMap<>();
+        result.put("data",data);
+        result.put("links",links);
+        return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
 
     @Operation(summary = "查询paper与paper之间的5跳之内（包括1跳）关系")
     @GetMapping("paandpa")
     public ResponseEntity<Object> getallpaandpa(@Param("index1") String index1,@Param("index2") String index2) {
-//        List<Map<String, Object>> allonereferednode = paperRepository.findAllonereferednode(index1, index2);
-//        List<Map<String, Object>> authorRelation = authorRepository.findauthorRelation(index1, index2);
-//        List<Map<String, Object>> allthreereferednode = paperRepository.findAllthreereferednode(index1, index2);
-//        List<Map<String, Object>> authorinterestRelation = interestRepository.findauthorinterestRelation(index1, index2);
-////        authorRepository.findallRelation("624678", "624878");
-////        List<Map<String, Object>> authorRelation = authorRepository.findauthorRelation("624678", "624878");
-//        Map<String,List> result=new HashMap<>();
-//
-//        result.put("onepaandpa", allonereferednode);
-//        result.put("twopaandpa", authorRelation);
-//        result.put("threepaandpa", allthreereferednode);
-//        result.put("fourpaandpa", authorinterestRelation);
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-        List<Map<String, Object>> findpandpnode = paperRepository.findpandpnode(index1, index2);
-        return new ResponseEntity<>(findpandpnode, HttpStatus.OK);
+        List<Map<String, String>> data = new ArrayList<>();
+        List<Map<String,String>>  links=new ArrayList<>();
+        List<Map<String, Object>> allttestnode = paperRepository.findpandpnode(index1,index2);
+        for (Map<String, Object> temp:allttestnode){
+            InternalPath.SelfContainedSegment[] ps=(InternalPath.SelfContainedSegment[]) temp.get("p");
+            for (InternalPath.SelfContainedSegment p : ps) {
+                InternalNode st= (InternalNode) p.start();
+                Map<String, Object> sttest= st.asMap();
+                Map<String, String> stret = new HashMap<>();
+                for (Map.Entry<String, Object> entry : sttest.entrySet()) {
+                    stret.put(entry.getKey(), (String) entry.getValue());
+                }
+                List<String> labels = (List<String>) st.labels();
+                String q=labels.get(0);
+                if(labels.get(0).equals("PAPER")){
+                    stret.put("category","0");
+                }
+                else if(labels.get(0).equals("AUTHOR")){
+                    stret.put("category","1");
+                }
+                else if(labels.get(0).equals("INTEREST")){
+                    stret.put("category","2");
+                }
+                else if(labels.get(0).equals("AFFILIATION")){
+                    stret.put("category","3");
+                }
+                else if(labels.get(0).equals("VENUE")){
+                    stret.put("category","4");
+                }
+                boolean isEmpty=stret.containsKey("name");
+                if(isEmpty==true){
+                    String truename=stret.get("name");
+                    stret.put("truename",truename);
+                }
+                long tempid = st.id();
+                String id = String.valueOf(tempid);
+                stret.put("name",id);
+                boolean stexist=false;
+                for (Map<String,String> newMap : data){
+                    if(newMap.get("name").equals(stret.get("name"))){
+                        stexist=true;
+                    }
+                }
+                if(stexist==false){
+                    data.add(stret);
+                }
+
+
+                InternalNode end= (InternalNode) p.end();
+                Map<String, Object> endtest= end.asMap();
+                Map<String, String> endret = new HashMap<>();
+                for (Map.Entry<String, Object> entry : endtest.entrySet()) {
+                    endret.put(entry.getKey(), (String) entry.getValue());
+                }
+                List<String> endlabels = (List<String>) end.labels();
+                String endq=endlabels.get(0);
+                if(endlabels.get(0).equals("PAPER")){
+                    endret.put("category","0");
+                }
+                else if(endlabels.get(0).equals("AUTHOR")){
+                    endret.put("category","1");
+                }
+                else if(endlabels.get(0).equals("INTEREST")){
+                    endret.put("category","2");
+                }
+                else if(endlabels.get(0).equals("AFFILIATION")){
+                    endret.put("category","3");
+                }
+                else if(endlabels.get(0).equals("VENUE")){
+                    endret.put("category","4");
+                }
+                boolean endisEmpty=endret.containsKey("name");
+                if(endisEmpty==true){
+                    String endtruename=endret.get("name");
+                    endret.put("truename",endtruename);
+                }
+                long endtempid = end.id();
+                String endid = String.valueOf(endtempid);
+                endret.put("name",endid);
+                boolean endexist=false;
+                for (Map<String,String> newMap : data){
+                    if(newMap.get("name").equals(endret.get("name"))){
+                        endexist=true;
+                    }
+                }
+                if(endexist==false){
+                    data.add(endret);
+                }
+
+
+                InternalRelationship relationship= (InternalRelationship) p.relationship();
+                Map<String, String> link = new HashMap<>();
+                long startNodeId=relationship.startNodeId();
+                long endNodeId = relationship.endNodeId();
+                String type = relationship.type();
+                link.put("source",String.valueOf(startNodeId));
+                link.put("target",String.valueOf(endNodeId));
+                link.put("type",type);
+                links.add(link);
+
+            }
+        }
+        Map<String, Object> result= new HashMap<>();
+        result.put("data",data);
+        result.put("links",links);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @Operation(summary = "查询paper与paper之间的四跳关系")
     @GetMapping("paandau")
     public ResponseEntity<Object> getallpaandpafour(@Param("index1") String index1,@Param("index2") String index2) {
+        List<Map<String, String>> data = new ArrayList<>();
+        List<Map<String,String>>  links=new ArrayList<>();
+        List<Map<String, Object>> allttestnode = authorRepository.findAllaandpnode(index1,index2);
+        for (Map<String, Object> temp:allttestnode){
+            InternalPath.SelfContainedSegment[] ps=(InternalPath.SelfContainedSegment[]) temp.get("p");
+            for (InternalPath.SelfContainedSegment p : ps) {
+                InternalNode st= (InternalNode) p.start();
+                Map<String, Object> sttest= st.asMap();
+                Map<String, String> stret = new HashMap<>();
+                for (Map.Entry<String, Object> entry : sttest.entrySet()) {
+                    stret.put(entry.getKey(), (String) entry.getValue());
+                }
+                List<String> labels = (List<String>) st.labels();
+                String q=labels.get(0);
+                if(labels.get(0).equals("PAPER")){
+                    stret.put("category","0");
+                }
+                else if(labels.get(0).equals("AUTHOR")){
+                    stret.put("category","1");
+                }
+                else if(labels.get(0).equals("INTEREST")){
+                    stret.put("category","2");
+                }
+                else if(labels.get(0).equals("AFFILIATION")){
+                    stret.put("category","3");
+                }
+                else if(labels.get(0).equals("VENUE")){
+                    stret.put("category","4");
+                }
+                boolean isEmpty=stret.containsKey("name");
+                if(isEmpty==true){
+                    String truename=stret.get("name");
+                    stret.put("truename",truename);
+                }
+                long tempid = st.id();
+                String id = String.valueOf(tempid);
+                stret.put("name",id);
+                boolean stexist=false;
+                for (Map<String,String> newMap : data){
+                    if(newMap.get("name").equals(stret.get("name"))){
+                        stexist=true;
+                    }
+                }
+                if(stexist==false){
+                    data.add(stret);
+                }
 
-//        List<Map<String, Object>> authorRelation = interestRepository.findauthorinterestRelation(index1, index2);
-//
-////        List<Map<String, Object>> authorRelation = interestRepository.findauthorinterestRelation("1095401", "1242327");
 
-        return new ResponseEntity<>(authorRepository.findAllaandpnode(index1,index2), HttpStatus.OK);
+                InternalNode end= (InternalNode) p.end();
+                Map<String, Object> endtest= end.asMap();
+                Map<String, String> endret = new HashMap<>();
+                for (Map.Entry<String, Object> entry : endtest.entrySet()) {
+                    endret.put(entry.getKey(), (String) entry.getValue());
+                }
+                List<String> endlabels = (List<String>) end.labels();
+                String endq=endlabels.get(0);
+                if(endlabels.get(0).equals("PAPER")){
+                    endret.put("category","0");
+                }
+                else if(endlabels.get(0).equals("AUTHOR")){
+                    endret.put("category","1");
+                }
+                else if(endlabels.get(0).equals("INTEREST")){
+                    endret.put("category","2");
+                }
+                else if(endlabels.get(0).equals("AFFILIATION")){
+                    endret.put("category","3");
+                }
+                else if(endlabels.get(0).equals("VENUE")){
+                    endret.put("category","4");
+                }
+                boolean endisEmpty=endret.containsKey("name");
+                if(endisEmpty==true){
+                    String endtruename=endret.get("name");
+                    endret.put("truename",endtruename);
+                }
+                long endtempid = end.id();
+                String endid = String.valueOf(endtempid);
+                endret.put("name",endid);
+                boolean endexist=false;
+                for (Map<String,String> newMap : data){
+                    if(newMap.get("name").equals(endret.get("name"))){
+                        endexist=true;
+                    }
+                }
+                if(endexist==false){
+                    data.add(endret);
+                }
+
+
+                InternalRelationship relationship= (InternalRelationship) p.relationship();
+                Map<String, String> link = new HashMap<>();
+                long startNodeId=relationship.startNodeId();
+                long endNodeId = relationship.endNodeId();
+                String type = relationship.type();
+                link.put("source",String.valueOf(startNodeId));
+                link.put("target",String.valueOf(endNodeId));
+                link.put("type",type);
+                links.add(link);
+
+            }
+        }
+        Map<String, Object> result= new HashMap<>();
+        result.put("data",data);
+        result.put("links",links);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
