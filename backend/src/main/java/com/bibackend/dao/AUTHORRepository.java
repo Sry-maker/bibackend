@@ -33,4 +33,9 @@ public interface AUTHORRepository extends Neo4jRepository<AUTHOR,Long> {
     @Query("MATCH p=(author:AUTHOR)-[*..5]-(paper:PAPER) WHERE author.index=$index1 AND paper.index=$index2 RETURN p")
     List<Map<String,Object>> findAllaandpnode(@Param("index1") String index1,@Param("index2") String index2);
 
+//根据id，返回所有一跳关系
+//    MATCH p=(n)-[]-() where id(n)=4118488 RETURN p
+    @Query("MATCH p=(n)-[]-() where id(n)=$index RETURN p")
+    List<Map<String,Object>> findAllidnode(@Param("index") Long index);
+
 }
