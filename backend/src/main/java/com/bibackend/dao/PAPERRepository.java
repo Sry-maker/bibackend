@@ -16,6 +16,6 @@ public interface PAPERRepository extends Neo4jRepository<PAPER,Long> {
     List<Map<String,Object>> findAllonenode(@Param("index") String index);
 
 
-    @Query("MATCH p=(paper1:PAPER)-[*..5]-(paper2:PAPER) WHERE paper1.index=$index1 AND paper2.index=$index2 RETURN p")
+    @Query("MATCH p=(paper1:PAPER)-[*..4]-(paper2:PAPER) WHERE paper1.index=$index1 AND paper2.index=$index2 RETURN p")
     List<Map<String,Object>> findpandpnode(@Param("index1") String index1,@Param("index2") String index2);
 }

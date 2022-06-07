@@ -1,8 +1,7 @@
 package com.bibackend.entity;
 
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
@@ -13,6 +12,9 @@ import java.io.Serializable;
 @Data
 @Builder
 @NodeEntity(label = "AUTHOR")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AUTHOR implements Serializable{
     @Id
     @GeneratedValue
