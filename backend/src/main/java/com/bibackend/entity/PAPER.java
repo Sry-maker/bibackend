@@ -1,8 +1,10 @@
 package com.bibackend.entity;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
@@ -13,6 +15,8 @@ import java.io.Serializable;
 @Data
 @Builder
 @NodeEntity(label = "PAPER")
+@NoArgsConstructor
+@AllArgsConstructor
 public class PAPER implements Serializable {
     @Id
     @GeneratedValue
