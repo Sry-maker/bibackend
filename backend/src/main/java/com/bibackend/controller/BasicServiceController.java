@@ -82,7 +82,7 @@ public class BasicServiceController {
     }
 
 
-    @Operation(summary = "查询paper与author之间的5跳之内关系")
+    @Operation(summary = "查询author与paper之间的5跳之内关系")
     @GetMapping("paandau")
     public ResponseEntity<Object> getallpaandpafour(@Param("index1") String index1, @Param("index2") String index2) {
         return new ResponseEntity<>(basicFunctionService.getallpaandpafour(index1, index2), HttpStatus.OK);
