@@ -91,8 +91,8 @@ public class BasicServiceController {
 
     @Operation(summary = "根据id查询其所关联的所有关系和关联实体")
     @GetMapping("allid")
-    public ResponseEntity<Object> getallid(@Param("index") Long index) {
-        return new ResponseEntity<>(basicFunctionService.getallid(index), HttpStatus.OK);
+    public ResponseEntity<Object> getallid(@Param("id") Long id) {
+        return new ResponseEntity<>(basicFunctionService.getallid(id), HttpStatus.OK);
     }
 
 
