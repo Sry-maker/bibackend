@@ -25,20 +25,20 @@ public class BasicFunctionService {
 
     @Cacheable(key = "'author-relation-index-' + #p0")
     public Map<String, Object> getallauthor(String index) {
-        List<Map<String, String>> data = new ArrayList<>();
-        List<Map<String, String>> links = new ArrayList<>();
-        List<Map<String, Object>> allttestnode = authorRepository.findAllonetonode(index);
-        for (Map<String, Object> temp : allttestnode) {
+        List<Map<String, String>> data = new ArrayList<>();     // 最后的节点的list
+        List<Map<String, String>> links = new ArrayList<>();    // 最后的关系的list
+        List<Map<String, Object>> allttestnode = authorRepository.findAllonetonode(index);  //查询语句
+        for (Map<String, Object> temp : allttestnode) {   //处理所有返回的p（关系及节点）
             InternalPath.SelfContainedSegment[] ps = (InternalPath.SelfContainedSegment[]) temp.get("p");
             for (InternalPath.SelfContainedSegment p : ps) {
-                InternalNode st = (InternalNode) p.start();
-                Map<String, Object> sttest = st.asMap();
-                Map<String, String> stret = new HashMap<>();
+                InternalNode st = (InternalNode) p.start();   //取开始节点
+                Map<String, Object> sttest = st.asMap();      //开始节点的数据
+                Map<String, String> stret = new HashMap<>();  //储存一下
                 for (Map.Entry<String, Object> entry : sttest.entrySet()) {
                     stret.put(entry.getKey(), (String) entry.getValue());
                 }
                 List<String> labels = (List<String>) st.labels();
-                String q = labels.get(0);
+                String q = labels.get(0);    //判断节点类型，储存类型
                 if (labels.get(0).equals("PAPER")) {
                     stret.put("category", "0");
                 } else if (labels.get(0).equals("AUTHOR")) {
@@ -50,6 +50,7 @@ public class BasicFunctionService {
                 } else if (labels.get(0).equals("VENUE")) {
                     stret.put("category", "4");
                 }
+                //将原来节点内的name转换为truename，将id储存为name
                 boolean isEmpty = stret.containsKey("name");
                 if (isEmpty == true) {
                     String truename = stret.get("name");
@@ -68,7 +69,7 @@ public class BasicFunctionService {
                     data.add(stret);
                 }
 
-
+                // 结束节点，同开始节点
                 InternalNode end = (InternalNode) p.end();
                 Map<String, Object> endtest = end.asMap();
                 Map<String, String> endret = new HashMap<>();
@@ -96,6 +97,7 @@ public class BasicFunctionService {
                 long endtempid = end.id();
                 String endid = String.valueOf(endtempid);
                 endret.put("name", endid);
+                // 节点去重
                 boolean endexist = false;
                 for (Map<String, String> newMap : data) {
                     if (newMap.get("name").equals(endret.get("name"))) {
@@ -106,7 +108,7 @@ public class BasicFunctionService {
                     data.add(endret);
                 }
 
-
+                // 关系储存
                 InternalRelationship relationship = (InternalRelationship) p.relationship();
                 Map<String, String> link = new HashMap<>();
                 long startNodeId = relationship.startNodeId();
@@ -124,7 +126,7 @@ public class BasicFunctionService {
         result.put("links", links);
         return result;
     }
-
+    // 同上
     @Cacheable(key = "'paper-relation-index-' + #p0")
     public Map<String, Object> getallpaper(String index) {
         List<Map<String, String>> data = new ArrayList<>();
@@ -227,7 +229,7 @@ public class BasicFunctionService {
         return result;
 
     }
-
+    // 同上
     @Cacheable(key = "'a-a-relation-index1-' + #p0 + '-index2-' + #p1")
     public Map<String, Object> getallauandau(String index1, String index2) {
         List<Map<String, String>> data = new ArrayList<>();
@@ -329,7 +331,7 @@ public class BasicFunctionService {
         result.put("links", links);
         return result;
     }
-
+    // 同上
     @Cacheable(key = "'p-p-relation-index1-' + #p0 + '-index2-' + #p1")
     public Map<String, Object> getallpaandpa(String index1, String index2) {
         List<Map<String, String>> data = new ArrayList<>();
@@ -431,7 +433,7 @@ public class BasicFunctionService {
         result.put("links", links);
         return result;
     }
-
+    // 同上
     @Cacheable(key = "'p-a-relation-index1-' + #p0 + '-index2-' + #p1")
     public Map<String, Object> getallpaandpafour(String index1, String index2) {
         List<Map<String, String>> data = new ArrayList<>();
@@ -533,7 +535,7 @@ public class BasicFunctionService {
         result.put("links", links);
         return result;
     }
-
+    // 同上
     @Cacheable(key = "'id-relation-index-' + #p0")
     public Map<String, Object> getallid(Long index) {
         List<Map<String, String>> data = new ArrayList<>();

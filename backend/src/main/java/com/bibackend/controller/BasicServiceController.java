@@ -68,21 +68,21 @@ public class BasicServiceController {
     }
 
 
-    @Operation(summary = "查询author与author之间的5跳及以内关系")
+    @Operation(summary = "查询author与author之间的4跳及以内关系")
     @GetMapping("auandau")
     public ResponseEntity<Object> getallauandau(@Param("index1") String index1, @Param("index2") String index2) {
         return new ResponseEntity<>(basicFunctionService.getallauandau(index1, index2), HttpStatus.OK);
     }
 
 
-    @Operation(summary = "查询paper与paper之间的5跳之内关系")
+    @Operation(summary = "查询paper与paper之间的4跳之内关系")
     @GetMapping("paandpa")
     public ResponseEntity<Object> getallpaandpa(@Param("index1") String index1, @Param("index2") String index2) {
         return new ResponseEntity<>(basicFunctionService.getallpaandpa(index1, index2), HttpStatus.OK);
     }
 
 
-    @Operation(summary = "查询author与paper之间的5跳之内关系")
+    @Operation(summary = "查询author与paper之间的4跳之内关系")
     @GetMapping("paandau")
     public ResponseEntity<Object> getallpaandpafour(@Param("index1") String index1, @Param("index2") String index2) {
         return new ResponseEntity<>(basicFunctionService.getallpaandpafour(index1, index2), HttpStatus.OK);
