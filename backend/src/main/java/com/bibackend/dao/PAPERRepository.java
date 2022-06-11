@@ -15,7 +15,7 @@ public interface PAPERRepository extends Neo4jRepository<PAPER,Long> {
     @Query("match p=(paper:PAPER)-[]-() where paper.index=$index return p")
     List<Map<String,Object>> findAllonenode(@Param("index") String index);
 
-
+    // 查询paper和paper之间有着4跳及以内的关系
     @Query("MATCH p=(paper1:PAPER)-[*..4]-(paper2:PAPER) WHERE paper1.index=$index1 AND paper2.index=$index2 RETURN p limit 10")
     List<Map<String,Object>> findpandpnode(@Param("index1") String index1,@Param("index2") String index2);
 }

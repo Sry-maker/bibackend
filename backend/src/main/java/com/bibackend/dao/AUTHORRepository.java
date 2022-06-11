@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface AUTHORRepository extends Neo4jRepository<AUTHOR,Long> {
 
-//    match(n:AUTHOR)-[r]->(nn) WHERE n.name = 'Chun-Yen Chang' RETURN n,r,nn
+
     // 查询某个领域的作者
     @Query("match (interest:INTEREST{name:$interestName})<-[r:has_interest]-(author:AUTHOR)" +
             "return author " +
@@ -25,16 +25,14 @@ public interface AUTHORRepository extends Neo4jRepository<AUTHOR,Long> {
     List<Map<String,Object>> findAllonetonode(@Param("index") String index);
 
 
-
+    // 查询author和author之间有着4跳及以内的关系
     @Query("MATCH p=(author1:AUTHOR)-[*..4]-(author2:AUTHOR) WHERE author1.index=$index1 AND author2.index=$index2 RETURN p limit 10")
     List<Map<String,Object>> findAllaandanode(@Param("index1") String index1,@Param("index2") String index2);
 
-
+    // 查询author和paper之间有着4跳及以内的关系
     @Query("MATCH p=(author:AUTHOR)-[*..4]-(paper:PAPER) WHERE author.index=$index1 AND paper.index=$index2 RETURN p limit 10")
     List<Map<String,Object>> findAllaandpnode(@Param("index1") String index1,@Param("index2") String index2);
-
-//根据id，返回所有一跳关系
-//    MATCH p=(n)-[]-() where id(n)=4118488 RETURN p
+    //根据id，返回所有一跳关系
     @Query("MATCH (n)-[]-() " +
             "where id(n)=$id " +
             "with count(*) as cnt " +
