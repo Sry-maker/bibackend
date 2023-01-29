@@ -3,7 +3,7 @@ import os
 
 from py2neo import Graph, Relationship, NodeMatcher, Node, errors
 
-# 使用环境变量，防止密码泄露
+# 使用环境变量获取连接信息
 graph = Graph(address=os.getenv("DATABASE_IP"),
               user=os.getenv("DATABASE_USER"),
               password=os.getenv("DATABASE_PWD"))
